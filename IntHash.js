@@ -26,6 +26,10 @@ class IntHash extends Hashable {
         return false;
     }
 
+    getString() {
+        return this.#intValue;
+    }
+
 }
 
 module.exports = IntHash;

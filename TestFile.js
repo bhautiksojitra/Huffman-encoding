@@ -56,6 +56,8 @@ function testPut() {
     assert(d1.get(key1) !== "Mike");
     assert(d1.get(key2) === "Steve");
 
+
+
 }
 
 function testContains() {
@@ -124,14 +126,14 @@ function testTree() {
 
     let tree20 = tree1.combine(tree17, tree18);
     let tree21 = tree1.combine(tree19, tree16);
-    console.log(tree20.compareTo(tree21));
+    console.log(tree18.compareTo(tree17));
 }
 
 function main() {
-    //testIsEmpty();
-    //testPut();
-    //testContains();
-    //testReplace();
+    testIsEmpty();
+    testPut();
+    testContains();
+    testReplace();
     testTree();
 
 }

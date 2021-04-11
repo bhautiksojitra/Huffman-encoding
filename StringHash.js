@@ -44,5 +44,9 @@ class StringHash extends Hashable {
         return false;
     }
 
+    getString() {
+        return this.#stringVal;
+    }
+
 }
 module.exports = StringHash;

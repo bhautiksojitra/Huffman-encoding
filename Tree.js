@@ -61,6 +61,18 @@ class Tree {
 
     }
 
+    increaseWeight(value) {
+        this.#weight = this.#weight + value;
+    }
+
+    getChar() {
+        return this.#charValue;
+    }
+
+    getWeight() {
+        return this.#weight;
+    }
+
 }
 
 module.exports = Tree;

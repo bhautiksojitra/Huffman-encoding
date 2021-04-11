@@ -68,6 +68,16 @@ class Dictionary {
     }
 
 
+    printData() {
+        for (let i = 0; i < this.#size; i++)
+            this.#array[i].printList();
+    }
+
+    getArray() {
+        return this.#array;
+    }
+
+
 
 
 

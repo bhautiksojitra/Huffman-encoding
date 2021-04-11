@@ -63,6 +63,18 @@ class LinkedList {
         return this.#top === null;
     }
 
+    printList() {
+        let temp = this.#top;
+
+        while (temp != null) {
+            console.log(" " + temp.getData().getKey().getString()
+                + " " + temp.getData().getValue());
+            temp = temp.getNext();
+        }
+    }
+
+
+
 
 
 }
