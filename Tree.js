@@ -20,20 +20,23 @@ class Tree {
             resultTree.#rightSubTree = rightTree;
         }
         else {
-            throw new Error("Can't combine diffrent Objects together ");
+            resultTree = null;
         }
         return resultTree;
     }
 
     compareTo(otherTree) {
         let returnVal;
-        if (otherTree.#weight < this.#weight)
-            returnVal = 1;
-        else if (otherTree.#weight > this.#weight)
-            returnVal = -1
+        if (Math.abs(otherTree.#weight - this.#weight) > Math.pow(10, -12)) {
+            if (otherTree.#weight - this.#weight > 0)
+                returnVal = -1
+            else if (otherTree.#weight - this.#weight < 0)
+                returnVal = 1;
+        }
         else {
             let minCharOther = this.recursiveHelper(otherTree);
             let minCharThis = this.recursiveHelper(this);
+
             if (minCharOther < minCharThis)
                 returnVal = 1;
             else if (minCharOther > minCharThis)
@@ -50,7 +53,7 @@ class Tree {
         if (tree.#charValue === null) {
             let minCharLeft = this.recursiveHelper(tree.#leftSubTree);
             let minCharRight = this.recursiveHelper(tree.#rightSubTree);
-            console.log(minCharLeft, minCharRight);
+
             if (minCharLeft <= minCharRight)
                 return minCharLeft;
             else
@@ -60,6 +63,29 @@ class Tree {
         return tree.#charValue;
 
     }
+
+    traversal(tree, charTree) {
+
+
+        let str = "";
+        if (tree.getLeft() !== null && tree.getLeft().compareTo(charTree) >= 0) {
+            if (tree.getLeft().getChar() !== charTree.getChar())
+                str = str + "0" + tree.traversal(tree.getLeft(), charTree);
+            else if (tree.getLeft().getChar() === charTree.getChar())
+                str = str + "0";
+        }
+
+        if (tree.getRight() !== null && tree.getRight().compareTo(charTree) <= 0) {
+            if (tree.getRight().getChar() !== charTree.getChar())
+                str = str + "1" + tree.traversal(tree.getRight(), charTree);
+            else if (tree.getRight().getChar() === charTree.getChar())
+                str = str + "1";
+        }
+
+        return str;
+    }
+
+
 
     increaseWeight(value) {
         this.#weight = this.#weight + value;
@@ -72,6 +98,16 @@ class Tree {
     getWeight() {
         return this.#weight;
     }
+
+    getLeft() {
+        return this.#leftSubTree;
+    }
+
+    getRight() {
+        return this.#rightSubTree;
+    }
+
+
 
 }
 

@@ -126,14 +126,14 @@ function testTree() {
 
     let tree20 = tree1.combine(tree17, tree18);
     let tree21 = tree1.combine(tree19, tree16);
-    console.log(tree18.compareTo(tree17));
+    console.log(tree20.traversal(tree20, tree5));
 }
 
 function main() {
-    testIsEmpty();
-    testPut();
-    testContains();
-    testReplace();
+    // testIsEmpty();
+    // testPut();
+    // testContains();
+    // testReplace();
     testTree();
 
 }
