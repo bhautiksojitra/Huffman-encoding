@@ -1,6 +1,5 @@
 'use strict';
 
-let Hashable = require('./Hashable');
 class KVPair {
     #key;
     #value;

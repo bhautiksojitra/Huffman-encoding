@@ -1,5 +1,6 @@
+'use strict'
 
-class Tree {
+class HuffmanTree {
 
     #weight
     #charValue;
@@ -14,8 +15,8 @@ class Tree {
 
     combine(leftTree, rightTree) {
         let resultTree;
-        if (leftTree instanceof Tree && rightTree instanceof Tree) {
-            resultTree = new Tree(null, leftTree.#weight + rightTree.#weight);
+        if (leftTree instanceof HuffmanTree && rightTree instanceof HuffmanTree) {
+            resultTree = new HuffmanTree(null, leftTree.#weight + rightTree.#weight);
             resultTree.#leftSubTree = leftTree;
             resultTree.#rightSubTree = rightTree;
         }
@@ -64,28 +65,6 @@ class Tree {
 
     }
 
-    traversal(tree, charTree) {
-
-
-        let str = "";
-        if (tree.getLeft() !== null && tree.getLeft().compareTo(charTree) >= 0) {
-            if (tree.getLeft().getChar() !== charTree.getChar())
-                str = str + "0" + tree.traversal(tree.getLeft(), charTree);
-            else if (tree.getLeft().getChar() === charTree.getChar())
-                str = str + "0";
-        }
-
-        if (tree.getRight() !== null && tree.getRight().compareTo(charTree) <= 0) {
-            if (tree.getRight().getChar() !== charTree.getChar())
-                str = str + "1" + tree.traversal(tree.getRight(), charTree);
-            else if (tree.getRight().getChar() === charTree.getChar())
-                str = str + "1";
-        }
-
-        return str;
-    }
-
-
 
     increaseWeight(value) {
         this.#weight = this.#weight + value;
@@ -111,4 +90,4 @@ class Tree {
 
 }
 
-module.exports = Tree;
+module.exports = HuffmanTree;

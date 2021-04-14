@@ -1,100 +1,103 @@
 let fs = require('fs');
 let Dictionary = require('./Dictionary.js');
-const StringHash = require('./StringHash.js');
-const Tree = require('./Tree.js');
+let StringHash = require('./StringHash.js');
+let HuffmanTree = require('./HuffmanTree.js');
 
-function main() {
+class HuffmanEncode {
 
-    let contents = fs.readFileSync("inputData.txt", "utf8");
+    #file
+    constructor(fileName) {
+        this.#file = fileName;
+    }
 
-    let hashTable = new Dictionary(1);
+    encode() {
 
-    for (let i = 0; i < contents.length; i++) {
-        let newKey = new StringHash(contents[i]);
-        let weight = 1 / contents.length;
-        if (!hashTable.contains(newKey)) {
-            hashTable.put(newKey, weight);
+        let fileData = fs.readFileSync(this.#file, "utf8");
+        let hashTable = new Dictionary(1);
+
+        for (let i = 0; i < fileData.length; i++) {
+
+            let newKey = new StringHash(fileData[i]);
+            let charPercentage = 1 / fileData.length;
+
+            if (!hashTable.contains(newKey))
+                hashTable.put(newKey, charPercentage);
+            else
+                hashTable.put(newKey, hashTable.get(newKey) + charPercentage);
+
         }
-        else {
-            hashTable.put(newKey, hashTable.get(newKey) + weight);
+
+        let size = Math.min(fileData.length, 256);
+
+        let huffmanTrees = new Array(size);
+        let index = 0;
+
+        for (let i = 0; i < fileData.length; i++) {
+            if (!this.contains(huffmanTrees, index, fileData[i]))
+                huffmanTrees[index++] = new HuffmanTree(fileData[i], hashTable.get(new StringHash(fileData[i])));
 
         }
 
+        huffmanTrees.length = index;
 
-    }
+        for (let i = 0; i < huffmanTrees.length; i++)
+            console.log(huffmanTrees[i].getChar() + " " + huffmanTrees[i].getWeight());
+
+        while (huffmanTrees.length > 1) {
+            huffmanTrees.sort(function (a, b) { return a.compareTo(b) });
+
+            let tree1 = huffmanTrees.shift();
+            let tree2 = huffmanTrees.shift();
 
 
 
-    // hashTable.printData();
-    size = Math.min(contents.length, 256);
+            tree1 = tree1.combine(tree1, tree2);
 
-    let huffmanTrees = new Array(size);
-    let j = 0;
+            huffmanTrees.push(tree1);
 
-    for (let i = 0; i < contents.length; i++) {
-        if (!contains(huffmanTrees, j, contents[i])) {
-            huffmanTrees[j++] = new Tree(contents[i], hashTable.get(new StringHash(contents[i])));
         }
-    }
 
-    huffmanTrees.length = j;
+        let binaryDict = new Dictionary(1);
 
-    for (let i = 0; i < huffmanTrees.length; i++)
-        console.log(huffmanTrees[i].getChar() + " " + huffmanTrees[i].getWeight());
+        this.pathToBinary(huffmanTrees[0], "", binaryDict);
 
-    while (huffmanTrees.length > 1) {
-        huffmanTrees.sort(function (a, b) { return a.compareTo(b) });
+        binaryDict.printData();
 
-        let tree1 = huffmanTrees.shift();
-        let tree2 = huffmanTrees.shift();
+        fs.writeFileSync(this.#file + ".huff", "");
 
+        for (let i = 0; i < fileData.length; i++) {
+            fs.appendFileSync(this.#file + ".huff", binaryDict.get(new StringHash(fileData[i])) + " ");
+        }
 
+        fs.appendFileSync(this.#file + ".huff", "\n");
 
-        tree1 = tree1.combine(tree1, tree2);
-
-        huffmanTrees.push(tree1);
 
     }
 
-    let binaryDict = new Dictionary(1);
+    contains(setOfTrees, size, key) {
+        for (let i = 0; i < size; i++) {
+            if (key === setOfTrees[i].getChar())
+                return true;
+        }
 
-    binaryEncoding(huffmanTrees[0], "", binaryDict);
-
-    binaryDict.printData();
-
-    fs.writeFileSync("output.txt", "");
-
-    for (let i = 0; i < contents.length; i++) {
-        fs.appendFileSync("output.txt", binaryDict.get(new StringHash(contents[i])) + " ");
+        return false;
     }
 
+
+    pathToBinary(tree, binaryCode, list) {
+
+        if (tree.getLeft() !== null)
+            this.pathToBinary(tree.getLeft(), binaryCode + "0", list);
+        if (tree.getRight() !== null)
+            this.pathToBinary(tree.getRight(), binaryCode + "1", list);
+
+        if (tree.getLeft() === null && tree.getRight() === null) {
+            let key = new StringHash(tree.getChar());
+            list.put(key, binaryCode);
+        }
+
+    }
 
 }
 
-function contains(setOfTrees, size, key) {
-    for (let i = 0; i < size; i++) {
-        if (key === setOfTrees[i].getChar())
-            return true;
-    }
-
-    return false;
-}
-
-
-function binaryEncoding(tree, str, list) {
-
-    if (tree.getLeft() === null && tree.getRight() === null) {
-        list.put(new StringHash(tree.getChar()), str);
-    }
-
-
-    if (tree.getLeft() !== null)
-        binaryEncoding(tree.getLeft(), str + "0", list);
-    if (tree.getRight() !== null)
-        binaryEncoding(tree.getRight(), str + "1", list);
-
-
-}
-
-
-main();
+module.exports = HuffmanEncode;

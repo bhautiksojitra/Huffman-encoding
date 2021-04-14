@@ -7,7 +7,7 @@ let LinkedList = require('./LinkedList.js');
 let KVPair = require('./KVPair.js');
 let IntHash = require('./IntHash.js');
 let StringHash = require('./StringHash.js');
-let Tree = require('./Tree.js');
+let Tree = require('./HuffmanTree.js');
 
 
 
